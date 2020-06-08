@@ -261,12 +261,12 @@ func (c *Conn) Handshake() error {
 	}
 
 	// Disco.initialize(handshakePattern string, initiator bool, prologue []byte, s, e, rs, re *KeyPair) (h handshakeState)
-	var remoteKeyPair *KeyPair
+	var remoteKeyPair *X25519KeyPair
 	if c.config.RemoteKey != nil {
 		if len(c.config.RemoteKey) != 32 {
 			return errors.New("disco: the provided remote key is not 32-byte")
 		}
-		remoteKeyPair = &KeyPair{}
+		remoteKeyPair = &X25519KeyPair{}
 		copy(remoteKeyPair.PublicKey[:], c.config.RemoteKey)
 	}
 	hs := Initialize(c.config.HandshakePattern, c.isClient, c.config.Prologue, c.config.KeyPair, nil, remoteKeyPair, nil)

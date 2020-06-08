@@ -329,7 +329,7 @@ func LoadDiscoRootPrivateKey(discoRootPrivateKey string) (rootPrivateKey ed25519
 // GenerateAndSaveDiscoKeyPair generates a disco key pair (X25519 key pair)
 // and saves it to a file in hexadecimal form. If a non-empty passphrase is passed, the file
 // will be encrypted. You can use ExportPublicKey() to export the public key part.
-func GenerateAndSaveDiscoKeyPair(discoKeyPairFile string, passphrase string) (keyPair *KeyPair, err error) {
+func GenerateAndSaveDiscoKeyPair(discoKeyPairFile string, passphrase string) (keyPair *X25519KeyPair, err error) {
 	keyPair = GenerateKeypair(nil)
 	var dataToWrite [128]byte
 	hex.Encode(dataToWrite[:64], keyPair.PrivateKey[:])
@@ -351,7 +351,7 @@ func GenerateAndSaveDiscoKeyPair(discoKeyPairFile string, passphrase string) (ke
 
 // LoadDiscoKeyPair reads and parses a public/private key pair from a pair
 // of files. You can pass a non-empty passphrase if the keys are stored encrypted.
-func LoadDiscoKeyPair(discoKeyPairFile, passphrase string) (*KeyPair, error) {
+func LoadDiscoKeyPair(discoKeyPairFile, passphrase string) (*X25519KeyPair, error) {
 	keyPairString, err := ioutil.ReadFile(discoKeyPairFile)
 	if err != nil {
 		return nil, err
@@ -369,7 +369,7 @@ func LoadDiscoKeyPair(discoKeyPairFile, passphrase string) (*KeyPair, error) {
 		return nil, errors.New("Disco: Disco key pair file is not correctly formated")
 	}
 
-	var keyPair KeyPair
+	var keyPair X25519KeyPair
 	_, err = hex.Decode(keyPair.PrivateKey[:], keyPairString[:64])
 	if err != nil {
 		return nil, err

@@ -19,7 +19,7 @@ type Config struct {
 	// the type of Noise protocol that the client and the server will go through
 	HandshakePattern noiseHandshakeType
 	// the current peer's keyPair
-	KeyPair *KeyPair
+	KeyPair *X25519KeyPair
 	// the other peer's public key
 	RemoteKey []byte
 	// any messages that the client and the server previously exchanged in clear

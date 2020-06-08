@@ -20,18 +20,18 @@ const (
 
 // TODO: store the KeyPair's parts in *[32]byte or []byte ?
 
-// KeyPair contains a private and a public part, both of 32-byte.
+// X25519KeyPair contains a private and a public part, both of 32-byte.
 // It can be generated via the GenerateKeyPair() function.
 // The public part can also be extracted via the ExportPublicKey function.
-type KeyPair struct {
+type X25519KeyPair struct {
 	PrivateKey [32]byte // must stay a [32]byte because of Serialize()
 	PublicKey  [32]byte // must stay a [32]byte because of Serialize()
 }
 
 // GenerateKeypair creates a X25519 static keyPair out of a private key. If privateKey is nil the function generates a random key pair.
-func GenerateKeypair(privateKey *[32]byte) *KeyPair {
+func GenerateKeypair(privateKey *[32]byte) *X25519KeyPair {
 
-	var keyPair KeyPair
+	var keyPair X25519KeyPair
 	if privateKey != nil {
 		copy(keyPair.PrivateKey[:], privateKey[:])
 	} else {
@@ -46,11 +46,11 @@ func GenerateKeypair(privateKey *[32]byte) *KeyPair {
 }
 
 // ExportPublicKey returns the public part in hex format of a static key pair.
-func (kp KeyPair) ExportPublicKey() string {
+func (kp X25519KeyPair) ExportPublicKey() string {
 	return hex.EncodeToString(kp.PublicKey[:])
 }
 
-func dh(keyPair KeyPair, publicKey [32]byte) (shared [32]byte) {
+func dh(keyPair X25519KeyPair, publicKey [32]byte) (shared [32]byte) {
 
 	curve25519.ScalarMult(&shared, &keyPair.PrivateKey, &publicKey)
 
