@@ -21,15 +21,15 @@ const (
 // TODO: store the KeyPair's parts in *[32]byte or []byte ?
 
 // X25519KeyPair contains a private and a public part, both of 32-byte.
-// It can be generated via the GenerateKeyPair() function.
+// It can be generated via the GenerateX25519Keypair() function.
 // The public part can also be extracted via the ExportPublicKey function.
 type X25519KeyPair struct {
 	PrivateKey [32]byte // must stay a [32]byte because of Serialize()
 	PublicKey  [32]byte // must stay a [32]byte because of Serialize()
 }
 
-// GenerateKeypair creates a X25519 static keyPair out of a private key. If privateKey is nil the function generates a random key pair.
-func GenerateKeypair(privateKey *[32]byte) *X25519KeyPair {
+// GenerateX25519Keypair creates a X25519 static keyPair out of a private key. If privateKey is nil the function generates a random key pair.
+func GenerateX25519Keypair(privateKey *[32]byte) *X25519KeyPair {
 
 	var keyPair X25519KeyPair
 	if privateKey != nil {

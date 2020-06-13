@@ -100,12 +100,12 @@ type handshakeState struct {
 	// the symmetricState object
 	symmetricState symmetricState
 	/* Empty is a special value which indicates the variable has not yet been initialized.
-	we'll use KeyPair.privateKey = 0 as Empty
+	we'll use X25519KeyPair.privateKey = 0 as Empty
 	*/
-	s  KeyPair // The local static key pair
-	e  KeyPair // The local ephemeral key pair
-	rs KeyPair // The remote party's static public key
-	re KeyPair // The remote party's ephemeral public key
+	s  X25519KeyPair // The local static key pair
+	e  X25519KeyPair // The local ephemeral key pair
+	rs X25519KeyPair // The remote party's static public key
+	re X25519KeyPair // The remote party's ephemeral public key
 
 	// A boolean indicating the initiator or responder role.
 	initiator bool
@@ -121,7 +121,7 @@ type handshakeState struct {
 	psk []byte
 
 	// for test vectors
-	debugEphemeral *KeyPair
+	debugEphemeral *X25519KeyPair
 }
 
 // Serialize is a helper function to serialize a handshake state, later to be unserialized via
@@ -177,7 +177,7 @@ func (hs *handshakeState) Serialize() []byte {
 // (via the `Serialize()` function).
 // For security purposes, the long-term static keypair needs to be passed as argument.
 // RecoverState will crash if the passed serializedState is malformed
-func RecoverState(serialized []byte, psk []byte, s *KeyPair) handshakeState {
+func RecoverState(serialized []byte, psk []byte, s *X25519KeyPair) handshakeState {
 	// [s.pubkey(32), e(64), rs(32), re(32), initiator(1), messagePatterns(?), shouldWrite(1), symmetricState.isKeyed(1) , serializedStrobeState(?)]
 	bb := bytes.NewBuffer(serialized)
 	hs := handshakeState{}
@@ -237,7 +237,7 @@ func RecoverState(serialized []byte, psk []byte, s *KeyPair) handshakeState {
 // * prologue is a byte string record of anything that happened prior the Noise handshakeState
 // * s, e, rs, re are the local and remote static/ephemeral key pairs to be set (if they exist)
 // the function returns a handshakeState object.
-func Initialize(handshakeType noiseHandshakeType, initiator bool, prologue []byte, s, e, rs, re *KeyPair) (hs handshakeState) {
+func Initialize(handshakeType noiseHandshakeType, initiator bool, prologue []byte, s, e, rs, re *X25519KeyPair) (hs handshakeState) {
 
 	handshakePattern, ok := patterns[handshakeType]
 	if !ok {
@@ -511,7 +511,7 @@ func (hs *handshakeState) clear() {
 }
 
 // TODO: is there a better way to get rid of secrets in Go?
-func (kp *KeyPair) clear() {
+func (kp *X25519KeyPair) clear() {
 	for i := 0; i < len(kp.PrivateKey); i++ {
 		kp.PrivateKey[i] = 0
 	}
